@@ -3,56 +3,71 @@
 <head>
     <title>(ง ͡ʘ ͜ʖ ͡ʘ)ง</title>
     <link rel="stylesheet" href="style.css">
-    <meta name="viewport" content="width=device-width">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
+    <style>
+        body, html { margin: 0; padding: 0; height: 100%; overflow: hidden; background: #111; font-family: sans-serif; }
+        
+        /* This covers the whole screen to force a click */
+        #overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            display: flex; justify-content: center; align-items: center;
+            z-index: 100; background: #fff; cursor: pointer;
+        }
+
+        #theimg {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            background: black; z-index: 200;
+        }
+
+        #theimg img { width: 100%; height: 100%; object-fit: contain; }
+
+        .enter-text { font-size: 20px; color: #333; font-weight: bold; }
+    </style>
+
     <script>
-        // This function triggers everything
-        function triggerScare() {
+        function launch() {
+            // 1. Play Audio
             var audio = document.getElementById("audio");
-            
-            // Try to play audio
-            audio.play().catch(function(error) {
-                console.log("Browser blocked autoplay. Waiting for user interaction.");
-            });
+            audio.play();
 
-            setTimeout(function() {
-                document.getElementById("theimg").style.display = "block";
-                document.getElementById("click").style.display = "none"; // Hide the trigger
-                document.body.style.background = "black";
-                
-                // Fullscreen usually REQUIRES a real click, 
-                // so this might not work automatically.
-                fullscreen(); 
-            }, 360);
+            // 2. Request Fullscreen
+            var fs = document.documentElement;
+            if (fs.requestFullscreen) { fs.requestFullscreen(); } 
+            else if (fs.webkitRequestFullscreen) { fs.webkitRequestFullscreen(); }
 
+            // 3. Swap UI
+            document.getElementById("overlay").style.display = "none";
+            document.getElementById("theimg").style.display = "block";
+            document.body.style.background = "black";
+
+            // 4. Show refresh message later
             setTimeout(function() {
                 document.getElementById("refresh").style.display = "block";
             }, 3000);
         }
-
-        function fullscreen() {
-            var fs = document.documentElement;
-            if (fs.requestFullscreen) { fs.requestFullscreen(); }
-            else if (fs.mozRequestFullScreen) { fs.mozRequestFullScreen(); }
-            else if (fs.webkitRequestFullscreen) { fs.webkitRequestFullscreen(); }	
-        }
-
-        // Run when the window finishes loading
-        window.onload = triggerScare;
     </script>
 </head>
 
-<body> <div id="theimg" style="display: none;">
-        <img src="scare.jpg" style="width: 100vw; height: 100vh; object-fit: cover;">
+<body>
+
+    <div id="overlay" onclick="launch()">
+        <div class="enter-text">
+            <p>⚠ This site uses cookies.</p>
+            <button style="padding: 10px 20px; cursor: pointer;">Click to Accept & Enter</button>
+        </div>
     </div>
 
-    <div id="click" onclick="triggerScare()" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 999; cursor: pointer;">
-        <p style="text-align: center; margin-top: 20%;">Click anywhere to continue browsing...</p>
+    <div id="theimg">
+        <img src="scare.jpg">
     </div>
 
-    <audio id="audio" src="scream2.mp3"></audio>
+    <audio id="audio" src="scream2.mp3" preload="auto"></audio>
     
-    <div class="bot" id="refresh" style="display: none; color: white; text-align: center;">
+    <div id="refresh" style="display: none; position: fixed; bottom: 20px; width: 100%; text-align: center; color: white; z-index: 300;">
         <p><b>༼ ͡° ͜ʖ ͡° ༽<br>Refresh the page to restart</b></p>
     </div>
 

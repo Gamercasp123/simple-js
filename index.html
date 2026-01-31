@@ -1,58 +1,60 @@
 <!DOCTYPE html>
 <html>
-	<title>(ง ͡ʘ ͜ʖ ͡ʘ)ง</title>
-	<head>
-		<link rel="stylesheet" href="style.css">
-		<meta name="viewport" content="width=device-width">
-		
-		<script>
-		function play() {
-    		var audio = document.getElementById("audio");
-        	audio.play();
-		};
+<head>
+    <title>(ง ͡ʘ ͜ʖ ͡ʘ)ง</title>
+    <link rel="stylesheet" href="style.css">
+    <meta name="viewport" content="width=device-width">
+    
+    <script>
+        // This function triggers everything
+        function triggerScare() {
+            var audio = document.getElementById("audio");
+            
+            // Try to play audio
+            audio.play().catch(function(error) {
+                console.log("Browser blocked autoplay. Waiting for user interaction.");
+            });
 
-		function pic() {
-			document.getElementById("theimg").style.display = "block";
-			document.getElementById("main").style.display = "none";
-			document.body.style.background = "black";
-		};
+            setTimeout(function() {
+                document.getElementById("theimg").style.display = "block";
+                document.getElementById("click").style.display = "none"; // Hide the trigger
+                document.body.style.background = "black";
+                
+                // Fullscreen usually REQUIRES a real click, 
+                // so this might not work automatically.
+                fullscreen(); 
+            }, 360);
 
-		function refresh() {
-			document.getElementById("refresh").style.display = "block";
-		};
+            setTimeout(function() {
+                document.getElementById("refresh").style.display = "block";
+            }, 3000);
+        }
 
-		function fullscreen() {
-			var fs = document.documentElement;
-			if (fs.requestFullscreen) {
-				fs.requestFullscreen();
-			} else if (fs.mozRequestFullScreen) {
-				fs.mozRequestFullScreen();
-			} else if (fs.webkitRequestFullscreen) {
-				fs.webkitRequestFullscreen();
-			}	
-		};
-		</script>
-	</head>
+        function fullscreen() {
+            var fs = document.documentElement;
+            if (fs.requestFullscreen) { fs.requestFullscreen(); }
+            else if (fs.mozRequestFullScreen) { fs.mozRequestFullScreen(); }
+            else if (fs.webkitRequestFullscreen) { fs.webkitRequestFullscreen(); }	
+        }
 
-	<div id="theimg" style="display: none;">
-		<img src="scare.jpg">
-	</div>
+        // Run when the window finishes loading
+        window.onload = triggerScare;
+    </script>
+</head>
 
-		<div id="click">
-			<input type="button" value="click to browse" onclick="play(); setTimeout(pic, 360); setTimeout(fullscreen, 360); setTimeout(refresh, 3000);">
-		</div>
+<body> <div id="theimg" style="display: none;">
+        <img src="scare.jpg" style="width: 100vw; height: 100vh; object-fit: cover;">
+    </div>
 
-		<audio id="audio" src="scream2.mp3"></audio>
-		<!--https://cdn.hipwallpaper.com/i/25/8/LH1ZXE.jpg-->
-		
-		<div class="bot">
-			<p>© Giffy</p>
-		</div>
-	</div>
+    <div id="click" onclick="triggerScare()" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 999; cursor: pointer;">
+        <p style="text-align: center; margin-top: 20%;">Click anywhere to continue browsing...</p>
+    </div>
 
-	<div class="bot" id="refresh" style="display: none;">
-		<p><b>༼ ͡° ͜ʖ ͡° ༽<br>Refresh the page to restart</b></p>
-	</div>
+    <audio id="audio" src="scream2.mp3"></audio>
+    
+    <div class="bot" id="refresh" style="display: none; color: white; text-align: center;">
+        <p><b>༼ ͡° ͜ʖ ͡° ༽<br>Refresh the page to restart</b></p>
+    </div>
 
+</body>
 </html>
-
